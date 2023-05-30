@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import { JwtStrategy } from './auth/jwt.strategy';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -17,7 +17,7 @@ import { JwtStrategy } from './auth/jwt.strategy';
       isGlobal: true
       ,envFilePath: `.${process.env.NODE_ENV}.env`
     }),
+    UserModule,
   ],
-  providers: [JwtStrategy],
 })
 export class AppModule {}
