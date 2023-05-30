@@ -1,5 +1,6 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Put, Query, UsePipes, ValidationPipe } from '@nestjs/common';
 import { UserService } from './user.service';
+import { CreateUserDto } from './user.dto';
 import { User } from './user.interface';
 
 @Controller('user')
@@ -19,8 +20,9 @@ export class UserController {
    * @param name 유저 이름
    */
    @Post('/create_user')
-   onCreateUser(@Body('id') id: number, @Body('name') name: string): User[] {
-     return this.userService.onCreateUser(id, name);
+   @UsePipes(ValidationPipe)
+   onCreateUser(@Body() createUserDto: CreateUserDto ): User[] {
+     return this.userService.onCreateUser(createUserDto);
    }
 
    /**
@@ -61,9 +63,13 @@ export class UserController {
    * @param id 유저 고유 아이디
    * @param name 유저 이름
    */
-  @Patch('/user') // @PATCH : 단일 수정
-   setUser(@Param('id') id:number ,@Body('name') name:string ): User{
-    return this.userService.setUser(id,name);
+  @Patch('/user/:id') // @PATCH : 단일 수정
+  @UsePipes(ValidationPipe)
+   setUser(
+    @Param('id' ,ParseIntPipe) id:number 
+    ,@Body() createUserDto: CreateUserDto
+    ): User{
+    return this.userService.setUser(id ,createUserDto);
    }
 
   /**
