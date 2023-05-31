@@ -1,10 +1,19 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
+import { logger3 } from './logger3/logger3.middleware';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   
+  // Global Middleware 설정 -> Cors 속성 활성화
+  app.enableCors({
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    optionsSuccessStatus: 200,
+  });
+  
+  // app.use(logger3);
 
   // app.useGlobalPipes(
 
