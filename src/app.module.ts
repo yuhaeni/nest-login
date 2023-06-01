@@ -6,12 +6,10 @@ import { UserModule } from './user/user.module';
 import { LoggerMiddleware } from './logger/logger.middleware';
 import { typeORMConfig } from './configs/typeorm.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserRepository } from './repository/user.repository';
-import { TypeOrmExModule } from './db/typeorm-ex.module';
+
 
 @Module({
   imports: [
-    TypeOrmExModule.forCustomRepository([UserRepository]),
     TypeOrmModule.forRoot(typeORMConfig), // TypeORM 설정 파일 연결
     UserModule,
   ],

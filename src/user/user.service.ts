@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { User } from './user.interface';
 import { CreateUserDto } from './user.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { UserRepository } from 'src/repository/user.repository';
 
 const users: User[] = [
     { id: 1, name: '유저1' },
@@ -10,6 +12,11 @@ const users: User[] = [
   
 @Injectable()
 export class UserService {
+
+    // 생성자 부분에 가져와 사용한다.
+    constructor(
+        @InjectRepository(UserRepository) private userRepository: UserRepository,
+    ){}
 
     /**
    * @author Ryan
