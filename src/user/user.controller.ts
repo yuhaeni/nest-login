@@ -1,7 +1,9 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, ParseUUIDPipe, Patch, Post, Put, Query, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, ParseUUIDPipe, Patch, Post, Put, Query, UseGuards, UsePipes, ValidationPipe ,Request} from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './user.dto';
 import { User } from './user.interface';
+import { LocalAuthGuard } from 'src/auth/guards/local-auth.guard';
+
 
 @Controller('user')
 export class UserController {
@@ -95,6 +97,17 @@ export class UserController {
   deleteUser(@Query('id' ,ParseUUIDPipe) id:number): User[]{
     return this.userService.deleteUser(id);
   }
+
+
+  @UseGuards(LocalAuthGuard)
+  @Post('/auth/login')
+  async login(@Request() req) {
+
+    console.log('Login Route');
+
+    return req.user;
+  }
+
 
 
 }

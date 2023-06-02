@@ -1,4 +1,5 @@
-import { NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { async } from 'rxjs';
 import { CustomRepository } from 'src/db/typeorm-ex.decorator';
 import { User } from 'src/entity/uesr.entity';
@@ -9,6 +10,7 @@ import { Repository } from 'typeorm';
 // 출처: https://any-ting.tistory.com/114
 @CustomRepository(User)
 export class UserRepository extends Repository<User> {
+
 
     // 유저 생성
     async onCreate (createUserDto: CreateUserDto): Promise<boolean> {
@@ -91,6 +93,19 @@ export class UserRepository extends Repository<User> {
         }
 
         return true;
+
+    }
+
+    // 로그인 유저 조회
+    async  findByLogin (user_id:string , password: string) : Promise<User> {
+
+        const user = await this.findOne( {where: { user_id , password }} );
+
+        if(!user) {
+            throw new ForbiddenException('아이디와 비밀번호를 다시 확인해주세요.')
+        }
+
+        return user;
 
     }
 

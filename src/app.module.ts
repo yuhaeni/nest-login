@@ -1,18 +1,19 @@
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { JwtModule } from '@nestjs/jwt';
-import { PassportModule } from '@nestjs/passport';
 import { UserModule } from './user/user.module';
 import { LoggerMiddleware } from './logger/logger.middleware';
 import { typeORMConfig } from './configs/typeorm.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthService } from './auth/auth.service';
+import { AuthModule } from './auth/auth.module';
+
 
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(typeORMConfig), // TypeORM 설정 파일 연결
-    UserModule,
+    UserModule, AuthModule, 
   ],
+  providers: [],
   // imports: [
   //   PassportModule,
   //   JwtModule.register({
@@ -28,6 +29,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
   //   UserModule,
   // ],
 })
+
+
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): any {
     consumer
