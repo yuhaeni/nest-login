@@ -1,8 +1,8 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, ParseUUIDPipe, Patch, Post, Put, Query, UseGuards, UsePipes, ValidationPipe ,Request} from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './user.dto';
-import { User } from './user.interface';
 import { LocalAuthGuard } from 'src/auth/guards/local-auth.guard';
+import { User } from 'src/entity/uesr.entity';
 
 
 @Controller('user')
@@ -32,7 +32,7 @@ export class UserController {
    * @description 전체 유저 조회
    */
    @Get('/user_all')
-   getUserAll(): User[] {
+   getUserAll(): Promise<User[]> {
     return this.userService.getUserAll();
    }
 
@@ -43,7 +43,7 @@ export class UserController {
    * @param id 유저 고유 아이디
    */
   @Get('/user')
-   findByUserOne1(@Query('id' ,ParseUUIDPipe) id:number): User {
+   findByUserOne1(@Query('id' ,ParseUUIDPipe) id:string): Promise<User> {
     return this.userService.findByUserOne(id);
    }
 
@@ -54,7 +54,7 @@ export class UserController {
    * @param id 유저 고유 아이디
    */
    @Get('/user/:id')    
-   findByUserOne2(@Param('id' ,ParseUUIDPipe) id: number): User {
+   findByUserOne2(@Param('id' ,ParseUUIDPipe) id: string): Promise<User> {
      return this.userService.findByUserOne(id);
    }
 
@@ -68,9 +68,9 @@ export class UserController {
   @Patch('/user/:id') // @PATCH : 단일 수정
   @UsePipes(ValidationPipe)
    setUser(
-    @Param('id' ,ParseIntPipe) id:number 
+    @Param('id' ,ParseIntPipe) id:string 
     ,@Body() createUserDto: CreateUserDto
-    ): User{
+    ): Promise<boolean>{
     return this.userService.setUser(id ,createUserDto);
    }
 
@@ -82,8 +82,8 @@ export class UserController {
    * @param name 유저 이름
    */
   @Put('/user/update') // @Put: 전체 수정
-  setAllUser(@Body('id' ,ParseUUIDPipe) id:number , @Body('name') name:string): User[]{
-    return this.userService.setAllUser(id,name);
+  setAllUser(@Body() createUserDto: CreateUserDto[]): Promise<boolean>{
+    return this.userService.setAllUser(createUserDto);
   }
 
 
@@ -94,7 +94,7 @@ export class UserController {
    * @param id 유저 고유 아이디
    */
   @Delete('/user/delete')
-  deleteUser(@Query('id' ,ParseUUIDPipe) id:number): User[]{
+  deleteUser(@Query('id' ,ParseUUIDPipe) id:string): Promise<boolean>{
     return this.userService.deleteUser(id);
   }
 

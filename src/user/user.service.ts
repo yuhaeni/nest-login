@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { User } from './user.interface';
 import { CreateUserDto } from './user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from 'src/repository/user.repository';
+import { User } from 'src/entity/uesr.entity';
 
-const users: User[] = [
-    { id: 1, name: '유저1' },
-    { id: 2, name: '유저2' },
-    { id: 3, name: '유저3' },
-]
+// const users: User[] = [
+//     { id: 1, name: '유저1' },
+//     { id: 2, name: '유저2' },
+//     { id: 3, name: '유저3' },
+// ]
   
 @Injectable()
 export class UserService {
@@ -37,8 +37,8 @@ export class UserService {
    *
    * @returns {User[]} users
    */
-   getUserAll(): User[] {
-    return users;
+   getUserAll(): Promise<User[]> {
+    return this.userRepository.findAll();
   }
 
    /**
@@ -48,8 +48,8 @@ export class UserService {
    * @param id 유저 고유 아이디
    * @returns {User} users
    */
-   findByUserOne(id: number): User {
-    return users.find((data) => data.id = id);
+   findByUserOne(id: string): Promise<User> {
+    return this.userRepository.findById(id);
    }
 
    /**
@@ -58,10 +58,8 @@ export class UserService {
    *
    * @returns {User} users
    */   
-  setUser(id:number ,createUserDto: CreateUserDto): User {
-    return users.find((data) => {
-        if (data.id == id) return (data.name = createUserDto.name);
-    })
+  setUser(id:string ,createUserDto: CreateUserDto): Promise<boolean> {
+    return this.userRepository.onChangeUser(id ,createUserDto);
   }
 
    /**
@@ -70,16 +68,8 @@ export class UserService {
    *
    * @returns {User[]} users
    */
-   setAllUser(id,name): User[] {
-    return users.map((data) => {
-        if(data.id == id) {
-            data.name = name;
-        }
-        return {
-            id: data.id,
-            name: data.name,
-        }
-    })
+   setAllUser(createUserDto: CreateUserDto[]): Promise<boolean>{
+    return this.userRepository.onChangeUsers(createUserDto);
    }
 
    /**
@@ -89,8 +79,8 @@ export class UserService {
    * @param id
    * @returns {User[]} users
    */
-  deleteUser (id:number): User[]{
-    return users.filter((data) => data.id != id);
+  deleteUser (id:string): Promise<boolean> {
+    return this.userRepository.onDelete(id);
   }
 
 
