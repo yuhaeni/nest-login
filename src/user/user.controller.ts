@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Put, Query, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, ParseUUIDPipe, Patch, Post, Put, Query, UsePipes, ValidationPipe } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './user.dto';
 import { User } from './user.interface';
@@ -21,7 +21,7 @@ export class UserController {
    */
    @Post('/create_user')
    @UsePipes(ValidationPipe)
-   onCreateUser(@Body() createUserDto: CreateUserDto ): User[] {
+   onCreateUser(@Body() createUserDto: CreateUserDto ): Promise<boolean> {
      return this.userService.onCreateUser(createUserDto);
    }
 
@@ -41,7 +41,7 @@ export class UserController {
    * @param id 유저 고유 아이디
    */
   @Get('/user')
-   findByUserOne1(@Query('id') id:number): User {
+   findByUserOne1(@Query('id' ,ParseUUIDPipe) id:number): User {
     return this.userService.findByUserOne(id);
    }
 
@@ -52,7 +52,7 @@ export class UserController {
    * @param id 유저 고유 아이디
    */
    @Get('/user/:id')    
-   findByUserOne2(@Param('id') id: number): User {
+   findByUserOne2(@Param('id' ,ParseUUIDPipe) id: number): User {
      return this.userService.findByUserOne(id);
    }
 
@@ -80,7 +80,7 @@ export class UserController {
    * @param name 유저 이름
    */
   @Put('/user/update') // @Put: 전체 수정
-  setAllUser(@Body('id') id:number , @Body('name') name:string): User[]{
+  setAllUser(@Body('id' ,ParseUUIDPipe) id:number , @Body('name') name:string): User[]{
     return this.userService.setAllUser(id,name);
   }
 
@@ -92,7 +92,7 @@ export class UserController {
    * @param id 유저 고유 아이디
    */
   @Delete('/user/delete')
-  deleteUser(@Query('id') id:number): User[]{
+  deleteUser(@Query('id' ,ParseUUIDPipe) id:number): User[]{
     return this.userService.deleteUser(id);
   }
 

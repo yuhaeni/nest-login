@@ -14,8 +14,9 @@ const users: User[] = [
 export class UserService {
 
     // 생성자 부분에 가져와 사용한다.
-    constructor(
-        @InjectRepository(UserRepository) private userRepository: UserRepository,
+    constructor(                                    
+        @InjectRepository(UserRepository) 
+        private userRepository: UserRepository, 
     ){}
 
     /**
@@ -26,8 +27,8 @@ export class UserService {
    * @param name 유저 이름
    * @returns {User[]} users
    */
-    onCreateUser (createUserDto: CreateUserDto): User[] {
-        return users.concat({id: createUserDto.id ,name:createUserDto.name});
+    onCreateUser (createUserDto: CreateUserDto): Promise<boolean> {
+        return this.userRepository.onCreate(createUserDto);
     }
 
    /**
