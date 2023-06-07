@@ -1,8 +1,9 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, ParseUUIDPipe, Patch, Post, Put, Query, UseGuards, UsePipes, ValidationPipe ,Request} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, ParseUUIDPipe, Patch, Post, Put, Query, UseGuards, UsePipes, ValidationPipe ,Request, UseFilters} from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './user.dto';
 import { LocalAuthGuard } from 'src/auth/guards/local-auth.guard';
 import { User } from 'src/entity/uesr.entity';
+import { HttpExceptionFilter } from 'src/filter/filter.filter';
 
 
 @Controller('user')
@@ -10,6 +11,7 @@ export class UserController {
     constructor(private readonly userService:UserService){}
 
     @Get() // 경로를 설정하지 않으면 "user/" 경로로 설정이 된다.
+    @UseFilters(new HttpExceptionFilter())
     getHelloWord(): string {
         return this.userService.getHelloWord();
     }

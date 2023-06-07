@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { async } from 'rxjs';
 import { CustomRepository } from 'src/db/typeorm-ex.decorator';
@@ -15,17 +15,33 @@ export class UserRepository extends Repository<User> {
     // 유저 생성
     async onCreate (createUserDto: CreateUserDto): Promise<boolean> {
 
-        const { user_id , password , name , age } = createUserDto;
+        
+        try {
 
-        const user = await this.save({
-            user_id,
-            password,
-            salt:'테스트용',
-            name,
-            age,
-        });
+            const { user_id , password , name , age } = createUserDto;
 
-        return user ? true : false ; 
+            const user = await this.save({
+                user_id,
+                password,
+                salt:'테스트용',
+                name,
+                age,
+            });
+    
+            return user ? true : false ; 
+
+        } catch (error) {
+            
+            throw new HttpException (
+                {
+                    message: 'SQL 에러',
+                    eroor: error.sqlMessage,
+                },
+                HttpStatus.FORBIDDEN,
+            );
+            
+        }
+
         
     }
 

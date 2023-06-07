@@ -2,10 +2,14 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
 import * as config from 'config';
+import { HttpExceptionFilter } from './filter/filter.filter';
 
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  // 예외 필터 연결
+  app.useGlobalFilters(new HttpExceptionFilter());
   
   const serverConfig = config.get('server');
   const port = serverConfig.port;
