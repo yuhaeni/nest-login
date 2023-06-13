@@ -1,10 +1,14 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, ParseUUIDPipe, Patch, Post, Put, Query, UseGuards, UsePipes, ValidationPipe ,Request, UseFilters, Res} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, ParseUUIDPipe, Patch, Post, Put, Query, UseGuards, UsePipes, ValidationPipe ,Request, UseFilters, Res, UseInterceptors, Bind, UploadedFiles, HttpStatus} from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './user.dto';
 import { LocalAuthGuard } from 'src/auth/guards/local-auth.guard';
 import { User } from 'src/entity/uesr.entity';
 import { HttpExceptionFilter } from 'src/util/http-exception.filter';
+import { multerDiskOptions } from 'src/util/multer.options';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { Response } from 'express';
 
+let userId = '';
 
 @Controller('user')
 export class UserController {
@@ -118,9 +122,27 @@ export class UserController {
    * @param res Response 객체
    */
     @Post('/disk_upload1')
- 
-    uploadFileDisk(files: File[] , @Res() res: Response ) {
+    @UseInterceptors(FilesInterceptor('files' ,null ,multerDiskOptions))
+    @Bind(UploadedFiles())
+    uploadFileDisk(files: File[], @Res() res: Response) {
+      res.status(HttpStatus.OK).json({
+        success: true,
+        DataTransfer: this.userService.uploadFileDisk(files)
+      });
+    }
 
+    uploadFileDiskDestination(
+      files: File[]
+      ,@Body('user_id') user_id: string
+      ,@Res() res: Response
+    ) {
+      if (user_id != undefined) {
+        userId = user_id;
+      }
+      res.status(HttpStatus.OK).json({
+        success: true
+        ,data: this.userService.uploadFileDiskDestination(userId, files)
+      })
     }
 
 
