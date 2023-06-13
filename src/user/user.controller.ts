@@ -131,6 +131,15 @@ export class UserController {
       });
     }
 
+      /**
+   * @author Ryan
+   * @description 디스크 방식 파일 업로드 (2)-> Destination 옵션 미설정
+   *
+   * @param {File[]} files 다중 파일
+   * @param  user_id 유저 아이디
+   * @param res Response 객체
+   */
+
     uploadFileDiskDestination(
       files: File[]
       ,@Body('user_id') user_id: string
@@ -142,6 +151,29 @@ export class UserController {
       res.status(HttpStatus.OK).json({
         success: true
         ,data: this.userService.uploadFileDiskDestination(userId, files)
+      })
+    }
+
+      /**
+   * @author Ryan
+   * @description 메모리 방식 파일 업로드
+   *
+   * @param {File[]} files 다중 파일
+   * @param  user_id 유저 아이디
+   * @param res Response 객체
+   */
+  
+    uploadFileMemory(
+      files: File[]
+      ,@Body('user_id') user_id: string 
+      ,@Res() res: Response
+    ) {
+      if (user_id != undefined) {
+        userId = user_id;
+      }
+      res.status(HttpStatus.OK).json({
+        success: true,
+        data: this.userService.uploadFileMemory(userId, files),
       })
     }
 
