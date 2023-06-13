@@ -1,9 +1,9 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, ParseUUIDPipe, Patch, Post, Put, Query, UseGuards, UsePipes, ValidationPipe ,Request, UseFilters} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, ParseUUIDPipe, Patch, Post, Put, Query, UseGuards, UsePipes, ValidationPipe ,Request, UseFilters, Res} from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './user.dto';
 import { LocalAuthGuard } from 'src/auth/guards/local-auth.guard';
 import { User } from 'src/entity/uesr.entity';
-import { HttpExceptionFilter } from 'src/filter/filter.filter';
+import { HttpExceptionFilter } from 'src/util/http-exception.filter';
 
 
 @Controller('user')
@@ -109,6 +109,19 @@ export class UserController {
 
     return req.user;
   }
+
+    /**
+   * @author Ryan
+   * @description 디스크 방식 파일 업로드 (1)-> Destination 옵션 설정
+   *
+   * @param {File[]} files 다중 파일
+   * @param res Response 객체
+   */
+    @Post('/disk_upload1')
+ 
+    uploadFileDisk(files: File[] , @Res() res: Response ) {
+
+    }
 
 
 

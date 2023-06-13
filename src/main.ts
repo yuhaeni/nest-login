@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
 import * as config from 'config';
-import { HttpExceptionFilter } from './filter/filter.filter';
+import { HttpExceptionFilter } from './util/http-exception.filter';
 
 
 async function bootstrap() {
